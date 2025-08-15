@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solaris Bio</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e, #16213e);
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: #00ffff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .bio-card {
+            background: rgba(15, 25, 35, 0.9);
+            border: 2px solid transparent;
+            border-radius: 25px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 20px 40px rgba(0, 255, 255, 0.1),
+                0 0 60px rgba(0, 255, 255, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            animation: cardGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes cardGlow {
+            0% { 
+                border-color: rgba(0, 255, 255, 0.5);
+                box-shadow: 
+                    0 20px 40px rgba(0, 255, 255, 0.1),
+                    0 0 60px rgba(0, 255, 255, 0.05),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            }
+            100% { 
+                border-color: rgba(0, 255, 255, 0.8);
+                box-shadow: 
+                    0 25px 50px rgba(0, 255, 255, 0.2),
+                    0 0 80px rgba(0, 255, 255, 0.1),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        .bio-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.05), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .title {
+            text-align: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #00ffff;
+            margin-bottom: 30px;
+            text-shadow: 
+                0 0 10px #00ffff,
+                0 0 20px #00ffff,
+                0 0 30px #00ffff;
+            animation: titlePulse 2s ease-in-out infinite alternate;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes titlePulse {
+            0% { text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff; }
+            100% { text-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff, 0 0 45px #00ffff; }
+        }
+
+        .bio-item {
+            margin: 25px 0;
+            padding: 15px 20px;
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 15px;
+            border-left: 4px solid #00ffff;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .bio-item:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateX(10px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.2);
+        }
+
+        .bio-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, rgba(0, 255, 255, 0.2), transparent);
+            border-radius: 15px;
+            transition: width 0.3s ease;
+        }
+
+        .bio-item:hover::before {
+            width: 100%;
+        }
+
+        .label {
+            color: #00ff88;
+            font-weight: bold;
+            font-size: 1.1em;
+            text-shadow: 0 0 5px #00ff88;
+            display: inline-block;
+            min-width: 180px;
+        }
+
+        .value {
+            color: #ffffff;
+            font-size: 1.1em;
+            text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+        }
+
+        .telegram-link {
+            color: #00ddff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .telegram-link:hover {
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        .telegram-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00ddff, #00ffff);
+            transition: width 0.3s ease;
+        }
+
+        .telegram-link:hover::after {
+            width: 100%;
+        }
+
+        .minecraft-text {
+            background: linear-gradient(45deg, #00ff88, #00ffff, #88ff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+            animation: minecraftGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes minecraftGlow {
+            0% { filter: brightness(1) saturate(1); }
+            100% { filter: brightness(1.3) saturate(1.5); }
+        }
+
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00ffff;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 6s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .bio-card {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 2em;
+            }
+            
+            .label {
+                min-width: 120px;
+                font-size: 1em;
+            }
+            
+            .value {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="floating-particles"></div>
+    
+    <div class="container">
+        <div class="bio-card">
+            <h1 class="title">Solaris Bio</h1>
+            
+            <div class="bio-item">
+                <span class="label">Nickname:</span>
+                <span class="value">Solaris</span>
+            </div>
+            
+            <div class="bio-item">
+                <span class="label">Age:</span>
+                <span class="value">13</span>
+            </div>
+            
+            <div class="bio-item">
+                <span class="label">Telegram Channel:</span>
+                <span class="value">
+                    <a href="https://t.me/fkcsoc" class="telegram-link" target="_blank">@fkcsoc</a>
+                </span>
+            </div>
+            
+            <div class="bio-item">
+                <span class="label">Telegram Contact:</span>
+                <span class="value">
+                    <a href="https://t.me/folapie" class="telegram-link" target="_blank">@folapie</a>
+                </span>
+            </div>
+            
+            <div class="bio-item">
+                <span class="label">Favorite Activity:</span>
+                <span class="value">Playing <span class="minecraft-text">Minecraft</span></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Создание звезд
+        function createStars() {
+            const starsContainer = document.querySelector('.stars');
+            const numberOfStars = 100;
+            
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Создание плавающих частиц
+        function createParticles() {
+            const particlesContainer = document.querySelector('.floating-particles');
+            
+            setInterval(() => {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                particlesContainer.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, 7000);
+            }, 200);
+        }
+
+        // Параллакс эффект для карточки
+        function parallaxEffect() {
+            const card = document.querySelector('.bio-card');
+            
+            document.addEventListener('mousemove', (e) => {
+                const mouseX = e.clientX / window.innerWidth;
+                const mouseY = e.clientY / window.innerHeight;
+                
+                const rotateX = (mouseY - 0.5) * 10;
+                const rotateY = (mouseX - 0.5) * 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+            
+            document.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+            });
+        }
+
+        // Анимация появления элементов
+        function animateElements() {
+            const bioItems = document.querySelectorAll('.bio-item');
+            
+            bioItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(50px)';
+                item.style.transition = 'all 0.6s ease';
+                
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, index * 200 + 500);
+            });
+        }
+
+        // Эффект печатания для заголовка
+        function typewriterEffect() {
+            const title = document.querySelector('.title');
+            const text = 'Solaris Bio';
+            title.textContent = '';
+            
+            let i = 0;
+            const typeInterval = setInterval(() => {
+                title.textContent += text.charAt(i);
+                i++;
+                if (i > text.length - 1) {
+                    clearInterval(typeInterval);
+                }
+            }, 150);
+        }
+
+        // Инициализация всех эффектов
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            createParticles();
+            parallaxEffect();
+            animateElements();
+            typewriterEffect();
+        });
+
+        // Клик-эффекты для bio-item
+        document.querySelectorAll('.bio-item').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'translateX(10px) scale(1.02)';
+                }, 100);
+            });
+        });
+
+        // Случайное мерцание элементов
+        setInterval(() => {
+            const items = document.querySelectorAll('.bio-item');
+            const randomItem = items[Math.floor(Math.random() * items.length)];
+            randomItem.style.boxShadow = '0 0 30px rgba(0, 255, 255, 0.4)';
+            setTimeout(() => {
+                randomItem.style.boxShadow = '';
+            }, 1000);
+        }, 3000);
+    </script>
+</body>
+</html>
